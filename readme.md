@@ -47,6 +47,8 @@ python scraper.py
 ### 3️⃣ **Check Output**
 After running, you’ll get:
 - **Updated prices saved in** `C:\Users\NAME\Downloads\updated_pokemons_cards.csv`
+- ![image](https://github.com/user-attachments/assets/bf5cbf96-b47e-4e76-bf91-3c99dce00640)
+
 ---
 
 ## ❓ Troubleshooting
