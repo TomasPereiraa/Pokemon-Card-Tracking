@@ -9,6 +9,7 @@ It uses **Selenium with undetected_chromedriver** to bypass Cloudflare protectio
 ✔ **Saves prices into a CSV file**  
 ✔ **Automatically calculates the total Trend Price & 30-Day Avg Price**  
 ✔ **Runs minimized so it doesn’t interrupt your workflow**  
+✔ **Extracts Pokémon name and set from the URL**  
 ✔ **Computes the sum of all Trend Price & 30-Day Avg Price**  
 
 ---
@@ -31,11 +32,11 @@ The script automatically downloads the correct version of **ChromeDriver** using
 ## 🛠 **How to Use**
 ### 1️⃣ **Prepare Your CSV File**
 - Save a CSV file named **`pokemons_cards.csv`** in `C:\Users\NAME\Downloads\`
-- The CSV should contain two columns:
+- The CSV should contain one column:
   ```csv
-  Pokemons;URL
-  Giratina CZ;https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Giratina-VSTAR-CRZGG69
-  Arceus CZ;https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Arceus-VSTAR-CRZGG70
+  URL
+  https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Giratina-VSTAR-CRZGG69
+  https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Arceus-VSTAR-CRZGG70
   ```
 
 ### 2️⃣ **Run the Script**
@@ -47,13 +48,21 @@ python scraper.py
 ### 3️⃣ **Check Output**
 After running, you’ll get:
 - **Updated prices saved in** `C:\Users\NAME\Downloads\updated_pokemons_cards.csv`
-- ![image](https://github.com/user-attachments/assets/bf5cbf96-b47e-4e76-bf91-3c99dce00640)
-
+- The final CSV file will contain:
+  ```csv
+  Pokemons;Set;URL;Trend Price;30-Day Avg Price
+  Giratina VSTAR CRZGG69;Crown Zenith;https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Giratina-VSTAR-CRZGG69;232.3;244.37
+  Arceus VSTAR CRZGG70;Crown Zenith;https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Arceus-VSTAR-CRZGG70;208.29;172.72
+  ```
+  
 ---
 
 ## ❓ Troubleshooting
 ### 🔹 Chrome Opens and Closes Automatically?
 That’s normal. The script opens **a hidden Chrome session** to fetch prices and then closes it automatically.
+
+### 🔹 Getting HTTP 429 (Rate Limit) Error?
+Try increasing the `time.sleep(5)` delay in the script to **avoid hitting Cardmarket’s rate limit**.
 
 ---
 
