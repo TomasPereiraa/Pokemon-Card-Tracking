@@ -30,7 +30,7 @@ The script automatically downloads the correct version of **ChromeDriver** using
 
 ## 🛠 **How to Use**
 ### 1️⃣ **Prepare Your CSV File**
-- Save a CSV file named **`pokemons_cards.csv`** in `C:\Users\tomas\Downloads\`
+- Save a CSV file named **`pokemons_cards.csv`** in `C:\Users\NAME\Downloads\`
 - The CSV should contain two columns:
   ```csv
   Pokemons;URL
@@ -46,29 +46,12 @@ python scraper.py
 
 ### 3️⃣ **Check Output**
 After running, you’ll get:
-- **Updated prices saved in** `C:\Users\tomas\Downloads\updated_pokemons_cards.csv`
-- **Total Trend Price and 30-Day Avg Price printed in the terminal**
-
----
-
-## 📊 **Output Example**
-After running, the script will display:
-
-```
-📊 Total Trend Price: 447.56 €
-📊 Total 30-Day Avg Price: 418.87 €
-✅ Updated prices saved to 'C:\Users\tomas\Downloads\updated_pokemons_cards.csv'!
-```
-
+- **Updated prices saved in** `C:\Users\NAME\Downloads\updated_pokemons_cards.csv`
 ---
 
 ## ❓ Troubleshooting
 ### 🔹 Chrome Opens and Closes Automatically?
 That’s normal. The script opens **a hidden Chrome session** to fetch prices and then closes it automatically.
-
-### 🔹 Prices Show "Not Found"?
-- Ensure your **Cardmarket URLs** are correct.
-- Try increasing the `time.sleep(7)` value to **10 or 15 seconds** to allow more time for pages to load.
 
 ---
 
