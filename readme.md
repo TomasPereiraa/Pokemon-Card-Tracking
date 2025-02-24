@@ -74,11 +74,13 @@ pyinstaller --onefile --noconsole --hidden-import pandas --hidden-import seleniu
 ✔ `--onefile` → Creates a **single .exe file**  
 ✔ `--noconsole` → Hides the **black terminal window**  
 ✔ `--hidden-import pandas --hidden-import selenium` → Ensures all dependencies are included  
+![image](https://github.com/user-attachments/assets/d9314416-ac3f-4ff2-aa0c-c029ae2a4a35)
+![image](https://github.com/user-attachments/assets/1cba677c-6072-4d0a-ace8-cfc11de8daba)
 
 #### ✅ Find the `.exe`
 After PyInstaller finishes, go to:
 ```
-D:\Pokemon-Card-Tracking-main\dist\
+C:\Pokemon-Card-Tracking-main\dist\
 ```
 You will find:
 ```
