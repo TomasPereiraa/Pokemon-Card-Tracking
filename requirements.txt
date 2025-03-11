@@ -1,0 +1,4 @@
+pandas~=2.2.3
+undetected-chromedriver~=3.5.5
+selenium~=4.29.0
+matplotlib~=3.10.1
