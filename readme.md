@@ -7,42 +7,79 @@ It uses **Selenium with undetected_chromedriver** to bypass Cloudflare protectio
 ✔ **Fetches live prices from Cardmarket**  
 ✔ **Bypasses Cloudflare protection** using `undetected_chromedriver`  
 ✔ **Saves prices into a CSV file**  
-✔ **Automatically calculates the total Trend Price & 30-Day Avg Price**  
+✔ **Automatically calculates total Trend Price & 30-Day Avg Price**  
 ✔ **Runs minimized so it doesn’t interrupt your workflow**  
 ✔ **Extracts Pokémon name and set from the URL**  
-✔ **Computes the sum of all Trend Price & 30-Day Avg Price**  
-✔ **Standalone `.exe` version available – no Python needed!**  
+✔ **Stores historical price data in JSON (`data/price_history.json`)**  
+✔ **Visualizes individual and total price history with Matplotlib**  
 
 ---
 
 ## 📌 **Installation**
-### 1️⃣ **For Python Users**
-#### Install Python Dependencies
+### 1️⃣ Install Python Dependencies
 Run the following command to install the required Python packages:
 ```sh
-pip install pandas undetected-chromedriver selenium
+pip install pandas undetected-chromedriver selenium matplotlib
 ```
 
-#### Ensure You Have **Google Chrome**
+### 2️⃣ Ensure You Have **Google Chrome**
 The script requires **Google Chrome** installed on your system.
+
+### 3️⃣ Setup Data Directory
+Create a `data` folder in your project root directory to store historical data:
+```sh
+mkdir data
+```
+
+## 📂 **CSV File Setup**
+
+Save your Pokémon URLs to:
+
+```csv
+C:\Users\NAME\Downloads\pokemons_cards.csv
+```
+
+This CSV should have one column labeled `URL`:
+```csv
+URL
+https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Giratina-VSTAR-CRZGG69
+https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Arceus-VSTAR-CRZGG70
+```
+
+### 2️⃣ **Run the Script**
+
+## 🚀 How to Run the Scripts
+
+### ▶️ Fetch Prices and Update History
+Run `main.py` to fetch prices and update your CSV and historical data:
+```sh
+python main.py
+```
+
+- Prices will be saved in:
+```text
+C:\Users\NAME\Downloads\updated_pokemons_cards.csv
+```
+- Historical price data stored in:
+```text
+data/price_history.json
+```
 
 ---
 
-## 🛠 **How to Use (Python Version)**
-### 1️⃣ **Prepare Your CSV File**
-- Save a CSV file named **`pokemons_cards.csv`** in `C:\Users\NAME\Downloads\`
-- The CSV should contain one column:
-  ```csv
-  URL
-  https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Giratina-VSTAR-CRZGG69
-  https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Arceus-VSTAR-CRZGG70
-  ```
+## 📈 Visualize Price Trends
 
-### 2️⃣ **Run the Script**
-Execute the script using:
+### 📊 Visualize Historical Prices
+You can visualize historical price changes using the provided visualizer script:
 ```sh
-python scraper.py
+python visualizer.py
 ```
+
+- Search using partial or full card names.
+- See the historical trends visually.
+- Visualize total collection price changes by typing `total`.
+
+---
 
 ### 3️⃣ **Check Output**
 After running, you’ll get:
@@ -114,8 +151,9 @@ Ensure your friend has **Google Chrome installed**. The `.exe` uses Chrome to fe
 ---
 
 ## 💡 **Next Steps**
-- ✅ Automate the script to run **daily** using Windows Task Scheduler
-- ✅ Store historical data and analyze price trends
-- ✅ Create a simple **dashboard** to visualize price changes
-- ✅ Compute and display the total **Trend Price** and **30-Day Avg Price** for all fetched cards
-- ✅ Add an **auto-updater** for the `.exe` version
+## 🚀 Features Roadmap
+- ✅ Fetch historical data to analyze price trends
+- ✅ Visualize historical price trends graphically
+- ✅ Autocomplete-like partial card name searching
+- ✅ Compute and visualize total **Trend Price** and **30-Day Avg Price**
+- ✅ Schedule automatic daily price updates using Windows Task Scheduler
