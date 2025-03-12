@@ -140,8 +140,10 @@ gui_scraper.exe
 1. **Unzip the file** into a folder.  
 2. **Double-click `gui_scraper.exe`** to run it.  
 3. **Upload their CSV file** when prompted.  
-4. **Wait for the updated CSV to be saved in the same folder**.  
-⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+4. **Wait for the updated CSV to be saved in the same folder**.
+   
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+
 ---
 
 ## ❓ Troubleshooting
