@@ -1,0 +1,124 @@
+import tkinter as tk
+from tkinter import filedialog, messagebox, ttk
+import pandas as pd
+import os
+from utils import extract_name_set, load_csv, save_csv, load_price_history, save_price_history
+from scraper import setup_driver, get_cardmarket_prices
+from datetime import datetime
+import matplotlib.pyplot as plt
+
+class PriceTrackerGUI:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Pokémon Card Price Tracker")
+        self.csv_file = ""
+        self.history_file = "data/price_history.json"
+        self.price_history = {}
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.select_csv_btn = tk.Button(self.master, text="Select CSV", command=self.select_csv)
+        self.select_csv_btn.pack(pady=10)
+
+        self.run_scraper_btn = tk.Button(self.master, text="Run Scraper", command=self.run_scraper, state="disabled")
+        self.run_scraper_btn.pack(pady=10)
+
+        self.progress = ttk.Progressbar(self.master, orient="horizontal", length=300, mode='determinate')
+        self.progress.pack(pady=10)
+
+        self.view_graph_btn = tk.Button(self.master, text="View Graphs", command=self.view_graph, state="disabled")
+        self.view_graph_btn.pack(pady=10)
+
+    def select_csv(self):
+        self.csv_file = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
+        if self.csv_file:
+            messagebox.showinfo("CSV Selected", f"CSV file selected:\n{self.csv_file}")
+            self.run_scraper_btn.config(state="normal")
+
+    def run_scraper(self):
+        if not self.csv_file:
+            messagebox.showerror("Error", "Please select a CSV file first.")
+            return
+
+        df = load_csv(self.csv_file)
+        df[["Pokemons", "Set"]] = df["URL"].apply(lambda x: pd.Series(extract_name_set(x)))
+        driver = setup_driver()
+
+        today_str = datetime.today().strftime('%Y-%m-%d')
+        self.price_history = load_price_history(self.history_file)
+
+        df["Trend Price"] = ""
+        df["30-Day Avg Price"] = ""
+
+        total_rows = len(df)
+        self.progress['maximum'] = total_rows
+
+        for index, row in df.iterrows():
+            prices = get_cardmarket_prices(driver, row["URL"])
+
+            df.at[index, "Trend Price"] = prices["Trend Price"]
+            df.at[index, "30-Day Avg Price"] = prices["30-Day Avg Price"]
+
+            card_name = row["Pokemons"]
+            self.price_history.setdefault(card_name, []).append({
+                "date": today_str,
+                "trend_price": prices["Trend Price"].replace(" €", "").replace(",", "."),
+                "avg_30_price": prices["30-Day Avg Price"].replace(" €", "").replace(",", ".")
+            })
+
+            self.progress['value'] = index + 1
+            self.master.update_idletasks()
+
+        driver.quit()
+
+        df["Trend Price"] = pd.to_numeric(df["Trend Price"].str.replace(" €", "").str.replace(",", "."), errors="coerce")
+        df["30-Day Avg Price"] = pd.to_numeric(df["30-Day Avg Price"].str.replace(" €", "").str.replace(",", "."), errors="coerce")
+
+        total_row = pd.DataFrame([["Total", "", "", df["Trend Price"].sum(), df["30-Day Avg Price"].sum()]], columns=df.columns)
+        df = pd.concat([df, total_row], ignore_index=True)
+
+        output_file = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")])
+        save_csv(df, output_file)
+
+        os.makedirs(os.path.dirname(self.history_file), exist_ok=True)
+        save_price_history(self.price_history, self.history_file)
+
+        messagebox.showinfo("Success", f"Data saved successfully to:\n{output_file}")
+        self.view_graph_btn.config(state="normal")
+
+    def view_graph(self):
+        self.price_history = load_price_history(self.history_file)
+
+        if not self.price_history:
+            messagebox.showerror("Error", "No data available. Please run scraper first.")
+            return
+
+        date_totals = {}
+        for entries in self.price_history.values():
+            for entry in entries:
+                date = entry["date"]
+                date_totals.setdefault(date, {"trend": 0, "avg": 0})
+                date_totals[date]["trend"] += float(entry["trend_price"])
+                date_totals[date]["avg"] += float(entry["avg_30_price"])
+
+        dates = sorted(date_totals.keys())
+        trend_totals = [date_totals[date]["trend"] for date in dates]
+        avg_totals = [date_totals[date]["avg"] for date in dates]
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(dates, trend_totals, marker='o', label="Trend Total")
+        plt.plot(dates, avg_totals, marker='x', label="30-Day Avg Total")
+        plt.xlabel('Date')
+        plt.ylabel('Total Price (€)')
+        plt.title('Total Prices Over Time')
+        plt.grid()
+        plt.legend()
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.show()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = PriceTrackerGUI(root)
+    root.mainloop()
