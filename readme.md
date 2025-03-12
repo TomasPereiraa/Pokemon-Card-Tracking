@@ -102,17 +102,23 @@ Make sure you have PyInstaller installed by running:
 ```sh
 pip install pyinstaller
 ```
-
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 #### ✅ Create the `.exe`
-Run this command inside the folder where your `gui_scraper.py` file is located:
+Run this command inside the folder where your `gui_version2.py` file is located:
+⚠️THIS PART IS NOT FINAL ⚠️
+⚠️WIP⚠️
+Select the CSV
+Wait until is Finish! (Progress Bar)
+Select where you want to save the New CSV file
+Can choose to see the Graph of the history prices 
 ```sh
 pyinstaller --onefile --noconsole --hidden-import pandas --hidden-import selenium gui_scraper.py
 ```
 ✔ `--onefile` → Creates a **single .exe file**  
 ✔ `--noconsole` → Hides the **black terminal window**  
 ✔ `--hidden-import pandas --hidden-import selenium` → Ensures all dependencies are included  
-![image](https://github.com/user-attachments/assets/d9314416-ac3f-4ff2-aa0c-c029ae2a4a35)
-![image](https://github.com/user-attachments/assets/1cba677c-6072-4d0a-ace8-cfc11de8daba)
+![image](https://github.com/user-attachments/assets/dcd7a775-929a-48dd-ba29-64057812a67e)
+![image](https://github.com/user-attachments/assets/e16ae7f6-94b5-40fd-a613-af7ccb052dde)
 
 #### ✅ Find the `.exe`
 After PyInstaller finishes, go to:
@@ -135,7 +141,7 @@ gui_scraper.exe
 2. **Double-click `gui_scraper.exe`** to run it.  
 3. **Upload their CSV file** when prompted.  
 4. **Wait for the updated CSV to be saved in the same folder**.  
-
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 ---
 
 ## ❓ Troubleshooting
@@ -152,8 +158,4 @@ Ensure your friend has **Google Chrome installed**. The `.exe` uses Chrome to fe
 
 ## 💡 **Next Steps**
 ## 🚀 Features Roadmap
-- ✅ Fetch historical data to analyze price trends
-- ✅ Visualize historical price trends graphically
-- ✅ Autocomplete-like partial card name searching
-- ✅ Compute and visualize total **Trend Price** and **30-Day Avg Price**
 - ✅ Schedule automatic daily price updates using Windows Task Scheduler
