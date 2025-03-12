@@ -107,10 +107,10 @@ pip install pyinstaller
 **Run this command inside the folder where your `gui_version2.py` file is located:**
 **⚠️THIS PART IS NOT FINAL ⚠️**
 **⚠️WIP⚠️**
-**Select the CSV**
-**Wait until is Finish! (Progress Bar)**
-**Select where you want to save the New CSV file**
-**Can choose to see the Graph of the history prices **
+-**Select the CSV**
+-**Wait until is Finish! (Progress Bar)**
+-**Select where you want to save the New CSV file**
+-**Can choose to see the Graph of the history prices**
 ```sh
 pyinstaller --onefile --noconsole --hidden-import pandas --hidden-import selenium gui_scraper.py
 ```
