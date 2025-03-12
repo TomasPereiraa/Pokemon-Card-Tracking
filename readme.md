@@ -160,7 +160,7 @@ That’s normal. The script opens **a hidden Chrome session** to fetch prices an
 Try increasing the `time.sleep(5)` delay in the script to **avoid hitting Cardmarket’s rate limit**.
 
 ### 🔹 `.exe` Doesn’t Work on Another PC?
-Ensure your friend has **Google Chrome installed**. The `.exe` uses Chrome to fetch prices.
+Ensure  **Google Chrome is installed**. The `.exe` uses Chrome to fetch prices.
 
 ---
 
