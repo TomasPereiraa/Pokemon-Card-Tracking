@@ -92,7 +92,7 @@ After running, you’ll get:
   ```
   
 ---
-
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 ## 🖥 **How to Use (Standalone .EXE Version)**
 ### 1️⃣ **Convert the Script to `.exe`**
 To make a standalone `.exe` that does not require Python, follow these steps:
@@ -102,7 +102,7 @@ Make sure you have PyInstaller installed by running:
 ```sh
 pip install pyinstaller
 ```
-⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+
 #### ✅ Create the `.exe`
 Run this command inside the folder where your `gui_version2.py` file is located:
 ⚠️THIS PART IS NOT FINAL ⚠️
