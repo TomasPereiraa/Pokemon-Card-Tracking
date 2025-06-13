@@ -1,3 +1,4 @@
+import os
 import json
 import matplotlib.pyplot as plt
 from datetime import datetime
@@ -16,8 +17,17 @@ def search_cards(history, query):
 
 def visualize_card(card_name, card_history):
     dates = [datetime.strptime(entry["date"], '%Y-%m-%d') for entry in card_history]
-    trend_prices = [float(entry["trend_price"].replace(",", ".")) if entry["trend_price"].replace('.', '', 1).isdigit() else None for entry in card_history]
-    avg_30_prices = [float(entry["avg_30_price"].replace(",", ".")) if entry["avg_30_price"].replace('.', '', 1).isdigit() else None for entry in card_history]
+    trend_prices = []
+    avg_30_prices = []
+    for entry in card_history:
+        try:
+            trend_prices.append(float(entry["trend_price"].replace("€", "").replace(",", ".").strip()))
+        except:
+            trend_prices.append(None)
+        try:
+            avg_30_prices.append(float(entry["avg_30_price"].replace("€", "").replace(",", ".").strip()))
+        except:
+            avg_30_prices.append(None)
 
     plt.figure(figsize=(10, 6))
     plt.plot(dates, trend_prices, marker='o', label="Trend Price")
@@ -32,27 +42,31 @@ def visualize_card(card_name, card_history):
     plt.show()
 
 
-def visualize_total(history_data):
+def visualize_total(history):
     date_history = {}
-    for card_history in history_data.values():
-        for entry in card_history:
+    for card_data in history.values():
+        for entry in card_data:
             date = entry["date"]
-            trend_price = float(entry["trend_price"].replace(",", ".")) if entry["trend_price"].replace('.', '', 1).isdigit() else 0
-            avg_30_price = float(entry["avg_30_price"].replace(",", ".")) if entry["avg_30_price"].replace('.', '', 1).isdigit() else 0
-
+            try:
+                trend_price = float(entry["trend_price"].replace("€", "").replace(",", ".").strip())
+            except:
+                trend_price = 0
+            try:
+                avg_30_price = float(entry["avg_30_price"].replace("€", "").replace(",", ".").strip())
+            except:
+                avg_30_price = 0
             if date not in date_history:
                 date_history[date] = {"trend_total": 0, "avg_30_total": 0}
-
             date_history[date]["trend_total"] += trend_price
             date_history[date]["avg_30_total"] += avg_30_price
 
-    dates = [datetime.strptime(date, '%Y-%m-%d') for date in sorted(date_history)]
-    trend_totals = [date_history[date]["trend_total"] for date in sorted(date_history)]
-    avg_30_totals = [date_history[date]["avg_30_total"] for date in sorted(date_history)]
+    dates = [datetime.strptime(d, '%Y-%m-%d') for d in sorted(date_history)]
+    trend_totals = [date_history[d]["trend_total"] for d in sorted(date_history)]
+    avg_totals = [date_history[d]["avg_30_total"] for d in sorted(date_history)]
 
     plt.figure(figsize=(10, 6))
     plt.plot(dates, trend_totals, marker='o', label='Total Trend Price')
-    plt.plot(dates, avg_30_totals, marker='x', label='Total 30-Day Avg Price')
+    plt.plot(dates, avg_totals, marker='x', label='Total 30-Day Avg Price')
     plt.xlabel('Date')
     plt.ylabel('Total Price (€)')
     plt.title('Total Collection Price History')
@@ -63,35 +77,58 @@ def visualize_total(history_data):
     plt.show()
 
 
-if __name__ == "__main__":
-    history_file = "data/price_history.json"
+def main():
+    # Determine JSON path relative to script location
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    default_path = os.path.join(script_dir, 'data', 'price_history.json')
+
+    # Allow custom path via first CLI argument
+    if len(sys.argv) > 1:
+        json_path = sys.argv[1]
+    else:
+        json_path = default_path
 
     try:
-        data = load_price_history(history_file)
+        data = load_price_history(json_path)
     except FileNotFoundError:
-        print(f"❌ The file '{history_file}' was not found. Please run 'main.py' first.")
+        print(f"JSON history file not found at {json_path}")
         sys.exit(1)
 
-    card_query = input("Enter Pokémon card name (or type 'total' for total prices): ").strip()
+    print(f"Loaded price history from: {json_path}")
 
-    if card_query.lower() == 'total':
-        visualize_total(data)
-    else:
+    while True:
+        card_query = input("Enter card name to visualize (or 'total' for collection, 'exit' to quit): ")
+        if card_query.lower() == 'exit':
+            print("Exiting visualizer.")
+            break
+
+        if card_query.lower() == 'total':
+            visualize_total(data)
+            continue
+
         matches = search_cards(data, card_query)
-
         if not matches:
-            print(f"No matches found for '{card_query}'")
-            sys.exit()
+            print(f"No matches found for '{card_query}'.")
+            continue
 
         if len(matches) > 1:
             print("Found multiple matches:")
             for idx, name in enumerate(matches.keys(), 1):
                 print(f"{idx}. {name}")
-
-            selection = int(input("Select the card by number (1, 2, 3...): ")) - 1
-            card_name = list(matches.keys())[selection]
+            try:
+                selection = int(input("Select the card by number: ")) - 1
+                if selection < 0 or selection >= len(matches):
+                    print("Invalid selection.")
+                    continue
+                card_name = list(matches.keys())[selection]
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+                continue
         else:
             card_name = next(iter(matches))
 
         selected_history = matches[card_name]
         visualize_card(card_name, selected_history)
+
+if __name__ == '__main__':
+    main()
