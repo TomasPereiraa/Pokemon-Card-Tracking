@@ -8,7 +8,7 @@ def extract_name_set(url):
     if len(parts) < 6:
         return "Unknown", "Unknown"
     set_name = parts[-2].replace("-", " ").title()
-    card_name = parts[-1].replace("-", " ")
+    card_name = parts[-1].replace("-", " ").title()
     return card_name, set_name
 
 def load_csv(csv_file):
@@ -18,13 +18,16 @@ def load_csv(csv_file):
     return df
 
 def save_csv(df, output_file):
-    df.to_csv(output_file, index=False, encoding="utf-8", sep=";")
+    df.to_csv(output_file, index=False, encoding="utf-8-sig", sep=";")
 
 def load_price_history(json_path):
     if not os.path.exists(json_path):
         return {}
     with open(json_path, 'r', encoding='utf-8') as file:
-        return json.load(file)
+        content = file.read().strip()
+        if not content:          # ← handles empty file
+            return {}
+        return json.loads(content)
 
 def save_price_history(data, json_path):
     with open(json_path, 'w', encoding='utf-8') as file:
