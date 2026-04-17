@@ -1,98 +1,74 @@
-# Pokémon Card Price Tracker
+# Pokemon Card Price Tracker
 
-A command-line tool that scrapes current market prices from Cardmarket for a list of Pokémon cards, saves the results to CSV, and tracks price history over time.
+This Python script automates the process of **fetching Pokémon card prices** from **Cardmarket** and saves them into a CSV file.  
+It uses **Selenium with undetected_chromedriver** to bypass Cloudflare protection and extract **Trend Price** and **30-Day Avg Price**.
 
-***
+## 🚀 Features
+✔ **Fetches live prices from Cardmarket**  
+✔ **Bypasses Cloudflare protection** using `undetected_chromedriver`  
+✔ **Saves prices into a CSV file**  
+✔ **Automatically calculates the total Trend Price & 30-Day Avg Price**  
+✔ **Runs minimized so it doesn’t interrupt your workflow**  
+✔ **Extracts Pokémon name and set from the URL**  
+✔ **Computes the sum of all Trend Price & 30-Day Avg Price**  
 
-## Requirements
+---
 
-- Python 3.10+
-- Google Chrome installed
-- Dependencies listed in `requirements.txt`
+## 📌 **Installation**
+### 1️⃣ Install Python Dependencies
+Run the following command to install the required Python packages:
+```sh
+pip install pandas undetected-chromedriver selenium
+```
 
-***
+### 2️⃣ Ensure You Have **Google Chrome**
+The script requires **Google Chrome** installed on your system.
 
-## First-Time Setup
+### 3️⃣ Download & Setup ChromeDriver
+The script automatically downloads the correct version of **ChromeDriver** using `undetected_chromedriver`.
 
-### For non-technical users
+---
 
-1. Install Python 3.10+ from https://www.python.org/downloads/
-   - During installation, check **"Add Python to PATH"** before clicking Install
-2. Run `install.bat` — this sets up everything automatically
-3. Run `run.bat` whenever you want to check prices
+## 🛠 **How to Use**
+### 1️⃣ **Prepare Your CSV File**
+- Save a CSV file named **`pokemons_cards.csv`** in `C:\Users\NAME\Downloads\`
+- The CSV should contain one column:
+  ```csv
+  URL
+  https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Giratina-VSTAR-CRZGG69
+  https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Arceus-VSTAR-CRZGG70
+  ```
 
-### For developers
+### 2️⃣ **Run the Script**
+Execute the script using:
+```sh
+python scraper.py
+```
 
-    pip install -r requirements.txt
+### 3️⃣ **Check Output**
+After running, you’ll get:
+- **Updated prices saved in** `C:\Users\NAME\Downloads\updated_pokemons_cards.csv`
+- The final CSV file will contain:
+  ```csv
+  Pokemons;Set;URL;Trend Price;30-Day Avg Price
+  Giratina VSTAR CRZGG69;Crown Zenith;https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Giratina-VSTAR-CRZGG69;232.3;244.37
+  Arceus VSTAR CRZGG70;Crown Zenith;https://www.cardmarket.com/en/Pokemon/Products/Singles/Crown-Zenith/Arceus-VSTAR-CRZGG70;208.29;172.72
+  ```
+  
+---
 
-***
+## ❓ Troubleshooting
+### 🔹 Chrome Opens and Closes Automatically?
+That’s normal. The script opens **a hidden Chrome session** to fetch prices and then closes it automatically.
 
-## Usage
+### 🔹 Getting HTTP 429 (Rate Limit) Error?
+Try increasing the `time.sleep(5)` delay in the script to **avoid hitting Cardmarket’s rate limit**.
 
-### Via `run.bat` (Windows)
+---
 
-Double-click `run.bat` or run it from the terminal. If no CSV file is passed as an argument, a file picker dialog will open automatically.
+## 💡 **Next Steps**
+- ✅ Automate the script to run **daily** using Windows Task Scheduler
+- ✅ Store historical data and analyze price trends
+- ✅ Create a simple **dashboard** to visualize price changes
+- ✅ Compute and display the total **Trend Price** and **30-Day Avg Price** for all fetched cards
 
-    run.bat [path\to\cards.csv]
-
-### Via Python directly
-
-    python main.py path\to\cards.csv [output.csv]
-
-If no output path is provided, the result is saved as `<input>_updated_<date>.csv` next to the input file.
-
-***
-
-## Input Format
-
-The input CSV must use `;` as the delimiter and include a `URL` column with valid Cardmarket product links.
-
-    URL
-    https://www.cardmarket.com/en/Pokemon/Products/Singles/Scarlet-Obsidian-Flames/Charizard-ex
-    https://www.cardmarket.com/en/Pokemon/Products/Singles/Base-Set/Pikachu
-
-***
-
-## Output
-
-- **Updated CSV** — original data with `Trend Price` and `30-Day Avg Price` columns added, plus a `TOTAL` row at the bottom
-- **`data/price_history.json`** — cumulative daily price log per card, used by the visualizer
-
-***
-
-## Performance
-
-The scraper runs multiple browsers in parallel to speed up large lists. You can adjust the number of workers at the top of `main.py`:
-
-    NUM_WORKERS = 5       # Number of parallel browsers
-    STAGGER_DELAY = 8     # Seconds between each worker starting
-
-Recommended values:
-
-- 2 workers — safest, slowest
-- 5 workers — good balance, tested and working
-- 10 workers — fastest, higher chance of Cloudflare flagging
-
-If you start getting flagged, reduce `NUM_WORKERS` to 2 and increase `STAGGER_DELAY` to 12.
-
-***
-
-## Price History Visualizer
-
-Run `visualizer.py` separately to plot price trends from the history file.
-
-    python visualizer.py
-
-Commands at the prompt:
-
-- Type a card name to search and plot its price history
-- Type `total` to see the total collection value over time
-- Type `exit` to quit
-
-***
-
-## Notes
-
-- Cardmarket uses Cloudflare bot protection. The scraper uses SeleniumBase UC mode to handle this automatically. Keep all browser windows visible while it runs — minimizing them can break the bot challenge.
-- Prices are scraped in EUR (€).
-- Only one entry per card per day is stored in the history file.
