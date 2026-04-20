@@ -17,17 +17,29 @@ pause
 echo.
 echo [1/4] A verificar Python...
 
-:: Obter o caminho exato do Python via py launcher ou python direto
-set PYTHON_EXE=
+set PYTHON_CMD=
 
-py -c "import sys; print(sys.executable)" >"%TEMP%\pypath.txt" 2>nul
-if not errorlevel 1 goto :read_path
+python --version >nul 2>&1
+if not errorlevel 1 ( set PYTHON_CMD=python & goto :python_found )
 
-python -c "import sys; print(sys.executable)" >"%TEMP%\pypath.txt" 2>nul
-if not errorlevel 1 goto :read_path
+py --version >nul 2>&1
+if not errorlevel 1 ( set PYTHON_CMD=py & goto :python_found )
 
-python3 -c "import sys; print(sys.executable)" >"%TEMP%\pypath.txt" 2>nul
-if not errorlevel 1 goto :read_path
+python3 --version >nul 2>&1
+if not errorlevel 1 ( set PYTHON_CMD=python3 & goto :python_found )
+
+for %%P in (
+    "%LOCALAPPDATA%\Programs\Python\Python314\python.exe"
+    "%LOCALAPPDATA%\Programs\Python\Python313\python.exe"
+    "%LOCALAPPDATA%\Programs\Python\Python312\python.exe"
+    "%LOCALAPPDATA%\Programs\Python\Python311\python.exe"
+    "%LOCALAPPDATA%\Programs\Python\Python310\python.exe"
+    "C:\Python314\python.exe"
+    "C:\Python313\python.exe"
+    "C:\Python312\python.exe"
+) do (
+    if exist %%P ( set PYTHON_CMD=%%~P & goto :python_found )
+)
 
 echo.
 echo  [!] Python nao foi encontrado.
@@ -38,19 +50,17 @@ start https://www.python.org/downloads/
 pause
 exit /b 1
 
-:read_path
-set /p PYTHON_EXE=<"%TEMP%\pypath.txt"
-del "%TEMP%\pypath.txt" >nul 2>&1
+:python_found
+for /f "tokens=*" %%v in ('"%PYTHON_CMD%" --version 2^>^&1') do set PYVER=%%v
+echo  [OK] %PYVER% encontrado!
 
-if "!PYTHON_EXE!"=="" (
-    echo  [!] Nao foi possivel determinar o caminho do Python.
-    pause
-    exit /b 1
+:: Detetar versao major.minor do Python
+for /f "tokens=2 delims= " %%v in ('"%PYTHON_CMD%" --version 2^>^&1') do set PY_FULL=%%v
+for /f "tokens=1,2 delims=." %%a in ("!PY_FULL!") do (
+    set PY_MAJOR=%%a
+    set PY_MINOR=%%b
 )
-
-for /f "tokens=*" %%v in ('"!PYTHON_EXE!" --version 2^>^&1') do set PYVER=%%v
-echo  [OK] !PYVER! encontrado!
-echo  [OK] Caminho: !PYTHON_EXE!
+echo  [INFO] Versao detetada: Python !PY_MAJOR!.!PY_MINOR!
 
 :: ─── Verificar Google Chrome ─────────────────────────────────────────────────
 echo.
@@ -79,7 +89,7 @@ echo [3/4] A criar ambiente virtual...
 if exist "%~dp0venv" (
     echo  [OK] Ambiente virtual ja existe, a reutilizar...
 ) else (
-    "!PYTHON_EXE!" -m venv "%~dp0venv"
+    "%PYTHON_CMD%" -m venv "%~dp0venv"
     if errorlevel 1 (
         echo.
         echo  [ERRO] Nao foi possivel criar o ambiente virtual.
@@ -98,10 +108,10 @@ echo.
 
 "%~dp0venv\Scripts\python.exe" -m pip install --upgrade pip --quiet
 
-:: Usar Python para decidir versoes a instalar (3.13+ precisa de versoes mais recentes)
-"%~dp0venv\Scripts\python.exe" -c "import sys; exit(0 if sys.version_info >= (3,13) else 1)" >nul 2>&1
-if not errorlevel 1 (
-    echo  [INFO] Python 3.13+ detetado - a usar versoes compativeis...
+:: Python 3.13+ requer versoes mais recentes de pandas e matplotlib
+:: pandas 2.2.x nao suporta Python 3.14 - usar versao sem restricao de versao
+if !PY_MINOR! GEQ 13 (
+    echo  [INFO] Python 3.!PY_MINOR! detetado - a usar versoes compativeis...
     "%~dp0venv\Scripts\pip.exe" install "pandas>=2.2.3" "seleniumbase>=4.34.4" "matplotlib>=3.10.1"
 ) else (
     if exist "%~dp0requirements.txt" (
